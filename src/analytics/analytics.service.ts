@@ -7,7 +7,11 @@ import {
   services,
   users,
 } from '../db/schema';
+<<<<<<< HEAD
 import { eq, sql, desc, and, gte, lte } from 'drizzle-orm';
+=======
+import { eq, sql, desc, and } from 'drizzle-orm';
+>>>>>>> development
 
 @Injectable()
 export class AnalyticsService {
@@ -137,7 +141,21 @@ export class AnalyticsService {
     };
   }
 
+<<<<<<< HEAD
   async getRecentActivity(tenantId: string, limit: number = 20) {
+=======
+  async getRecentActivity(tenantId: string, limit: number = 10, page: number = 1) {
+    const offset = (page - 1) * limit;
+
+    const baseQuery = db
+      .select({ count: sql<number>`count(*)` })
+      .from(serviceTransactions)
+      .where(eq(serviceTransactions.tenantId, tenantId));
+
+    const [totalResult] = await baseQuery;
+    const total = Number(totalResult?.count) || 0;
+
+>>>>>>> development
     const recentTx = await db
       .select({
         id: serviceTransactions.id,
@@ -155,11 +173,31 @@ export class AnalyticsService {
       .leftJoin(customers, eq(serviceTransactions.customerId, customers.id))
       .where(eq(serviceTransactions.tenantId, tenantId))
       .orderBy(desc(serviceTransactions.timestamp))
+<<<<<<< HEAD
       .limit(limit);
 
     return recentTx.map(tx => ({
       ...tx,
       customerName: tx.customerName || 'Walk-in Customer'
     }));
+=======
+      .limit(limit)
+      .offset(offset);
+
+    const data = recentTx.map((tx) => ({
+      ...tx,
+      customerName: tx.customerName || 'Walk-in Customer',
+    }));
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit) || 1,
+      },
+    };
+>>>>>>> development
   }
 }

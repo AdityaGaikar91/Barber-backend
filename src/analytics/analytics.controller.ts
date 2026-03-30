@@ -28,11 +28,20 @@ export class AnalyticsController {
     @Request() req: AuthenticatedRequest,
     @Query('tenantId') queryTenantId?: string,
     @Query('limit') limit?: string,
+<<<<<<< HEAD
+=======
+    @Query('page') page?: string,
+>>>>>>> development
   ) {
     const tenantId = req.user.tenantId || queryTenantId;
     return this.analyticsService.getRecentActivity(
       tenantId as string,
+<<<<<<< HEAD
       limit ? parseInt(limit, 10) : 20,
+=======
+      limit ? parseInt(limit, 10) : 10,
+      page ? parseInt(page, 10) : 1,
+>>>>>>> development
     );
   }
 }

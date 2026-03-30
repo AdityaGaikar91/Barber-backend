@@ -49,3 +49,6 @@ lerna-debug.log*
 # testsprite generated
 testsprite_tests/
 .testsprite/
+
+# internal scripts (not for deployment)
+src/scripts/

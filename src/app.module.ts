@@ -1,5 +1,12 @@
 import { Module } from '@nestjs/common';
+<<<<<<< HEAD
 import { ConfigModule } from '@nestjs/config';
+=======
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { BullModule } from '@nestjs/bullmq';
+>>>>>>> development
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -20,6 +27,32 @@ import { AdminModule } from './admin/admin.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+<<<<<<< HEAD
+=======
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        connection: {
+          host: configService.get<string>('REDIS_HOST', 'localhost'),
+          port: configService.get<number>('REDIS_PORT', 6379),
+        },
+      }),
+      inject: [ConfigService],
+    }),
+    ThrottlerModule.forRoot({
+      throttlers: [{ ttl: 60000, limit: 60 }],
+    }),
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        connection: {
+          host: configService.get('REDIS_HOST', 'localhost'),
+          port: configService.get<number>('REDIS_PORT', 6379),
+        },
+      }),
+      inject: [ConfigService],
+    }),
+>>>>>>> development
     EventEmitterModule.forRoot(),
     ScheduleModule.forRoot(),
     UsersModule,
@@ -36,6 +69,10 @@ import { AdminModule } from './admin/admin.module';
     AdminModule,
   ],
   controllers: [AppController],
+<<<<<<< HEAD
   providers: [AppService],
+=======
+  providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],
+>>>>>>> development
 })
 export class AppModule {}

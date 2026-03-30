@@ -17,5 +17,9 @@ export class CreateCustomerDto {
 
   @IsString()
   @IsOptional()
+<<<<<<< HEAD
+=======
+  @IsPhoneNumber()
+>>>>>>> development
   phone?: string;
 }

@@ -1,6 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Cron, CronExpression } from '@nestjs/schedule';
+<<<<<<< HEAD
+=======
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+>>>>>>> development
 import { db } from '../db';
 import { serviceTransactions, customers, services } from '../db/schema';
 import { eq, and, sql } from 'drizzle-orm';
@@ -9,6 +14,14 @@ import { eq, and, sql } from 'drizzle-orm';
 export class NotificationsService {
   private readonly logger = new Logger(NotificationsService.name);
 
+<<<<<<< HEAD
+=======
+  constructor(
+    @InjectQueue('appointments-queue')
+    private readonly appointmentsQueue: Queue,
+  ) {}
+
+>>>>>>> development
   /**
    * Listens for the 'transaction.completed' event emitted immediately after a service is logged.
    * If a customer is attached to the transaction, we dispatch a "Thank you" notification.
@@ -40,14 +53,58 @@ export class NotificationsService {
           `BODY: We appreciate your business at our shop today. See you next time!\n===============================\n`,
         );
       }
+<<<<<<< HEAD
     } catch (error) {
       this.logger.error(
         `Failed to process transaction.completed event: ${error.message}`,
+=======
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      this.logger.error(
+        `Failed to process transaction.completed event: ${errorMessage}`,
+>>>>>>> development
       );
     }
   }
 
   /**
+<<<<<<< HEAD
+=======
+   * Listens for new appointments and queues a reminder for the Owner.
+   * Reminder is scheduled for 24 hours before the appointment.
+   */
+  @OnEvent('appointment.created')
+  async handleNewAppointment(appointment: any) {
+    try {
+      this.logger.log(`Enqueuing Owner Reminder for appointment: ${appointment.id}`);
+      
+      const appointmentTime = new Date(appointment.appointmentTime).getTime();
+      const now = Date.now();
+      const oneDayInMs = 24 * 60 * 60 * 1000;
+      
+      // Calculate delay: 24 hours before the appointment. If less than 24h away, delay is 0.
+      const delay = Math.max(appointmentTime - oneDayInMs - now, 0);
+
+      await this.appointmentsQueue.add(
+        'reminder',
+        {
+          appointmentId: appointment.id,
+          tenantId: appointment.tenantId,
+          employeeId: appointment.employeeId,
+          startTime: appointment.appointmentTime,
+        },
+        { delay },
+      );
+      this.logger.log(`Reminder queued successfully. Delay: ${delay}ms`);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.logger.error(`Failed to queue reminder for appointment: ${errorMessage}`);
+    }
+  }
+
+  /**
+>>>>>>> development
    * Daily CRON Job: Runs every day at 10:00 AM.
    * Finds all transactions that occurred exactly 14 days ago (offset between 13.5 and 14.5 days visually,
    * or using pure date functions). Dispatches a "Time for a fresh cut!" reminder.
@@ -105,7 +162,12 @@ export class NotificationsService {
           );
         }
       }
+<<<<<<< HEAD
     } catch (error) {
+=======
+    } catch (error: any) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+>>>>>>> development
       this.logger.error(`Failed to process 2-week reminders: ${error.message}`);
     }
   }

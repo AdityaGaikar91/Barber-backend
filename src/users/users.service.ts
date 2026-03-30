@@ -1,5 +1,9 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { db } from '../db';
+<<<<<<< HEAD
+=======
+import { isDatabaseError } from '../db/database-error.interface';
+>>>>>>> development
 import { users, tenants } from '../db/schema';
 import { eq } from 'drizzle-orm';
 import * as bcrypt from 'bcrypt';
@@ -41,6 +45,7 @@ export class UsersService {
         .replace(/(^-|-$)+/g, '');
 
       try {
+<<<<<<< HEAD
         // Since neon-http doesn't natively support interactive transactions, we execute sequential awaits.
         const [newTenant] = await db
           .insert(tenants)
@@ -54,6 +59,20 @@ export class UsersService {
 
         try {
           const [newUser] = await db
+=======
+        const newUser = await db.transaction(async (tx) => {
+          const [newTenant] = await tx
+            .insert(tenants)
+            .values({
+              name: data.shopName!,
+              domain: domainSlug,
+              slug: domainSlug,
+              subscriptionTier: 'FREE',
+            })
+            .returning();
+
+          const [user] = await tx
+>>>>>>> development
             .insert(users)
             .values({
               name: data.name,
@@ -64,6 +83,7 @@ export class UsersService {
             })
             .returning();
 
+<<<<<<< HEAD
           return newUser;
         } catch (userError: any) {
           // Rollback tenant creation manually if user creation fails
@@ -74,12 +94,24 @@ export class UsersService {
         console.error('Registration error:', error);
         if (error.code === '23505') {
           // Postgres unique violation
+=======
+          return user;
+        });
+
+        return newUser;
+      } catch (error: unknown) {
+        if (isDatabaseError(error) && error.code === '23505') {
+>>>>>>> development
           throw new BadRequestException(
             'Domain or Shop Name might already exist.',
           );
         }
         throw new BadRequestException(
+<<<<<<< HEAD
           `Failed to create tenant and user: ${error.message || 'Unknown error'}`,
+=======
+          `Failed to create tenant and user: ${error instanceof Error ? error.message : 'Unknown error'}`,
+>>>>>>> development
         );
       }
     }

@@ -12,6 +12,10 @@ import { UpdateTenantSettingsDto } from './dto/update-tenant.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
+<<<<<<< HEAD
+=======
+import type { AuthenticatedRequest } from '../auth/interfaces/authenticated-request.interface';
+>>>>>>> development
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('tenants')
@@ -20,22 +24,39 @@ export class TenantsController {
 
   @Roles('OWNER')
   @Get('settings')
+<<<<<<< HEAD
   getSettings(@Request() req: any) {
     return this.tenantsService.getSettings(req.user.tenantId);
+=======
+  getSettings(@Request() req: AuthenticatedRequest) {
+    return this.tenantsService.getSettings(req.user.tenantId!);
+>>>>>>> development
   }
 
   @Roles('OWNER')
   @Patch('settings')
   async updateSettings(
+<<<<<<< HEAD
     @Request() req: any,
+=======
+    @Request() req: AuthenticatedRequest,
+>>>>>>> development
     @Body() updateTenantDto: UpdateTenantSettingsDto,
   ) {
     try {
       return await this.tenantsService.updateSettings(
+<<<<<<< HEAD
         req.user.tenantId,
         updateTenantDto,
       );
     } catch (e: any) {
+=======
+        req.user.tenantId!,
+        updateTenantDto,
+      );
+    } catch (e: any) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+>>>>>>> development
       throw new BadRequestException(e.message || 'Failed to update settings');
     }
   }

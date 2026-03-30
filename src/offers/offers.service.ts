@@ -2,6 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { db } from '../db';
 import { offers } from '../db/schema';
 import { eq, and } from 'drizzle-orm';
+<<<<<<< HEAD
+=======
+import { CreateOfferDto } from './dto/create-offer.dto';
+import { UpdateOfferDto } from './dto/update-offer.dto';
+>>>>>>> development
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import { ForbiddenException } from '@nestjs/common';
 
@@ -9,7 +14,11 @@ import { ForbiddenException } from '@nestjs/common';
 export class OffersService {
   constructor(private readonly subscriptionsService: SubscriptionsService) {}
 
+<<<<<<< HEAD
   async create(tenantId: string, data: any) {
+=======
+  async create(tenantId: string, data: CreateOfferDto) {
+>>>>>>> development
     const isPro = await this.subscriptionsService.isPro(tenantId);
     if (!isPro) {
       throw new ForbiddenException(
@@ -51,8 +60,13 @@ export class OffersService {
     return offer;
   }
 
+<<<<<<< HEAD
   async update(tenantId: string, id: string, data: any) {
     const updateData: any = { updatedAt: new Date() };
+=======
+  async update(tenantId: string, id: string, data: UpdateOfferDto) {
+    const updateData: Record<string, unknown> = { updatedAt: new Date() };
+>>>>>>> development
     if (data.title !== undefined) updateData.title = data.title;
     if (data.discountPercentage !== undefined)
       updateData.discountPercentage = data.discountPercentage;

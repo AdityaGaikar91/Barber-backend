@@ -23,7 +23,11 @@ async function bootstrap() {
 
   // Enable CORS
   app.enableCors({
+<<<<<<< HEAD
     origin: true,
+=======
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+>>>>>>> development
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
@@ -40,4 +44,11 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 }
+<<<<<<< HEAD
 bootstrap();
+=======
+bootstrap().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
+>>>>>>> development

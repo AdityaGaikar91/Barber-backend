@@ -2,15 +2,28 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { db } from '../db';
 import { services } from '../db/schema';
 import { eq, and } from 'drizzle-orm';
+<<<<<<< HEAD
 
 @Injectable()
 export class ServicesService {
   async create(tenantId: string, data: any) {
+=======
+import { CreateServiceDto } from './dto/create-service.dto';
+import { UpdateServiceDto } from './dto/update-service.dto';
+
+@Injectable()
+export class ServicesService {
+  async create(tenantId: string, data: CreateServiceDto) {
+>>>>>>> development
     const result = await db
       .insert(services)
       .values({
         tenantId,
         ...data,
+<<<<<<< HEAD
+=======
+        price: String(data.price),
+>>>>>>> development
       })
       .returning();
     return result[0];
@@ -30,10 +43,22 @@ export class ServicesService {
     return result[0];
   }
 
+<<<<<<< HEAD
   async update(tenantId: string, id: string, data: any) {
     const result = await db
       .update(services)
       .set({ ...data, updatedAt: new Date() })
+=======
+  async update(tenantId: string, id: string, data: UpdateServiceDto) {
+    const { price, ...rest } = data;
+    const result = await db
+      .update(services)
+      .set({
+        ...rest,
+        ...(price !== undefined && { price: String(price) }),
+        updatedAt: new Date(),
+      })
+>>>>>>> development
       .where(and(eq(services.id, id), eq(services.tenantId, tenantId)))
       .returning();
     if (!result.length) throw new NotFoundException('Service not found');

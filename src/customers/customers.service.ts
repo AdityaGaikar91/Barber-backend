@@ -1,13 +1,32 @@
+<<<<<<< HEAD
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { db } from '../db';
 import { customers } from '../db/schema';
 import { eq, and } from 'drizzle-orm';
+=======
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
+import { db } from '../db';
+import { customers } from '../db/schema';
+import { eq, and } from 'drizzle-orm';
+import { CreateCustomerDto } from './dto/create-customer.dto';
+import { UpdateCustomerDto } from './dto/update-customer.dto';
+>>>>>>> development
 
 @Injectable()
 export class CustomersService {
   async findOrCreate(tenantId: string, phone: string, name: string) {
     if (!phone) {
+<<<<<<< HEAD
       throw new BadRequestException('Phone number is required to track customers.');
+=======
+      throw new BadRequestException(
+        'Phone number is required to track customers.',
+      );
+>>>>>>> development
     }
     const [existing] = await db
       .select()
@@ -27,10 +46,17 @@ export class CustomersService {
         phone,
       })
       .returning();
+<<<<<<< HEAD
       
     return newCustomer;
   }
   async create(tenantId: string, data: any) {
+=======
+
+    return newCustomer;
+  }
+  async create(tenantId: string, data: CreateCustomerDto) {
+>>>>>>> development
     const [newCustomer] = await db
       .insert(customers)
       .values({
@@ -43,12 +69,22 @@ export class CustomersService {
     return newCustomer;
   }
 
+<<<<<<< HEAD
   async findAll(tenantId: string) {
+=======
+  async findAll(tenantId: string, limit = 100, offset = 0) {
+>>>>>>> development
     return db
       .select()
       .from(customers)
       .where(eq(customers.tenantId, tenantId))
+<<<<<<< HEAD
       .orderBy(customers.createdAt);
+=======
+      .orderBy(customers.createdAt)
+      .limit(limit)
+      .offset(offset);
+>>>>>>> development
   }
 
   async findOne(tenantId: string, id: string) {
@@ -63,7 +99,11 @@ export class CustomersService {
     return customer;
   }
 
+<<<<<<< HEAD
   async update(tenantId: string, id: string, data: any) {
+=======
+  async update(tenantId: string, id: string, data: UpdateCustomerDto) {
+>>>>>>> development
     const [updatedCustomer] = await db
       .update(customers)
       .set({
