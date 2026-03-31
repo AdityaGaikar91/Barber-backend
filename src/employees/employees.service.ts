@@ -1,11 +1,6 @@
-<<<<<<< HEAD
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-=======
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { isDatabaseError } from '../db/database-error.interface';
->>>>>>> development
 import { db } from '../db';
 import { employees, serviceTransactions, appointments } from '../db/schema';
 import { eq, and, desc, sql, or, gte } from 'drizzle-orm';
@@ -15,11 +10,8 @@ import { BadRequestException } from '@nestjs/common';
 import { users } from '../db/schema';
 
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
-<<<<<<< HEAD
-=======
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { LogTransactionDto } from './dto/log-transaction.dto';
->>>>>>> development
 
 @Injectable()
 export class EmployeesService {
@@ -28,11 +20,7 @@ export class EmployeesService {
     private subscriptionsService: SubscriptionsService,
   ) {}
 
-<<<<<<< HEAD
-  async create(tenantId: string, data: any) {
-=======
   async create(tenantId: string, data: CreateEmployeeDto) {
->>>>>>> development
     // Enforce employee limit based on subscription
     await this.subscriptionsService.checkEmployeeAvailability(tenantId);
     // Hash password
@@ -40,22 +28,6 @@ export class EmployeesService {
     const hashedPassword = await bcrypt.hash(data.password, saltRounds);
 
     try {
-<<<<<<< HEAD
-      // We use sequential inserts for neon-http
-      const [newUser] = await db
-        .insert(users)
-        .values({
-          tenantId,
-          name: data.name,
-          email: data.email,
-          passwordHash: hashedPassword,
-          role: 'EMPLOYEE',
-        })
-        .returning();
-
-      try {
-        const [newEmployee] = await db
-=======
       const newEmployee = await db.transaction(async (tx) => {
         const [newUser] = await tx
           .insert(users)
@@ -69,7 +41,6 @@ export class EmployeesService {
           .returning();
 
         const [employee] = await tx
->>>>>>> development
           .insert(employees)
           .values({
             tenantId,
@@ -77,21 +48,6 @@ export class EmployeesService {
             bio: data.bio,
           })
           .returning();
-<<<<<<< HEAD
-        return newEmployee;
-      } catch (employeeError) {
-        // Manually rollback the user if employee insert fails
-        await db.delete(users).where(eq(users.id, newUser.id));
-        throw employeeError;
-      }
-    } catch (error: any) {
-      if (error.code === '23505') {
-        // Postgres unique violation
-        throw new BadRequestException('User with this email already exists.');
-      }
-      throw new BadRequestException(
-        `Failed to create employee: ${error.message || 'Unknown error'}`,
-=======
 
         return employee;
       });
@@ -103,16 +59,11 @@ export class EmployeesService {
       }
       throw new BadRequestException(
         `Failed to create employee: ${error instanceof Error ? error.message : 'Unknown error'}`,
->>>>>>> development
       );
     }
   }
 
-<<<<<<< HEAD
-  async findAll(tenantId: string) {
-=======
   async findAll(tenantId: string, limit = 100, offset = 0) {
->>>>>>> development
     // Join with users table to get name and email
     return db
       .select({
@@ -127,12 +78,6 @@ export class EmployeesService {
       })
       .from(employees)
       .innerJoin(users, eq(employees.userId, users.id))
-<<<<<<< HEAD
-      .where(eq(employees.tenantId, tenantId));
-  }
-
-  async logServiceTransaction(tenantId: string, data: any) {
-=======
       .where(eq(employees.tenantId, tenantId))
       .limit(limit)
       .offset(offset);
@@ -142,7 +87,6 @@ export class EmployeesService {
     tenantId: string,
     data: LogTransactionDto & { employeeId: string },
   ) {
->>>>>>> development
     // Enforce monthly transaction limit based on subscription
     await this.subscriptionsService.checkTransactionAvailability(tenantId);
     const result = await db
@@ -152,11 +96,7 @@ export class EmployeesService {
         serviceId: data.serviceId,
         employeeId: data.employeeId,
         customerId: data.customerId || null,
-<<<<<<< HEAD
-        amount: data.amount,
-=======
         amount: String(data.amount),
->>>>>>> development
         status: 'COMPLETED',
       })
       .returning();
@@ -165,28 +105,6 @@ export class EmployeesService {
 
     // Auto-complete any open appointments for this customer today
     if (newTx.customerId) {
-<<<<<<< HEAD
-        const startOfDay = new Date();
-        startOfDay.setHours(0, 0, 0, 0);
-        
-        try {
-          await db.update(appointments)
-            .set({ status: 'COMPLETED' })
-            .where(
-              and(
-                eq(appointments.tenantId, tenantId),
-                eq(appointments.customerId, newTx.customerId),
-                gte(appointments.appointmentTime, startOfDay),
-                or(
-                  eq(appointments.status, 'PENDING'),
-                  eq(appointments.status, 'APPROVED')
-                )
-              )
-            );
-        } catch (e) {
-             console.error('Failed to auto-complete appointment:', e);
-        }
-=======
       const startOfDay = new Date();
       startOfDay.setHours(0, 0, 0, 0);
 
@@ -208,7 +126,6 @@ export class EmployeesService {
       } catch (e) {
         console.error('Failed to auto-complete appointment:', e);
       }
->>>>>>> development
     }
 
     // Emit event for automated notifications

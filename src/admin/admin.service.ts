@@ -5,54 +5,29 @@ import { eq, sql, count, desc } from 'drizzle-orm';
 
 @Injectable()
 export class AdminService {
-<<<<<<< HEAD
-  private readonly db = db;
-
-  async getPlatformStats() {
-    // Total tenants
-    const [tenantsCount] = await this.db
-=======
   async getPlatformStats() {
     // Total tenants
     const [tenantsCount] = await db
->>>>>>> development
       .select({ value: count() })
       .from(schema.tenants);
 
     // Total users
-<<<<<<< HEAD
-    const [usersCount] = await this.db
-      .select({ value: count() })
-      .from(schema.users);
-
-    // Total revenue
-    const [revenueResult] = await this.db
-=======
     const [usersCount] = await db.select({ value: count() }).from(schema.users);
 
     // Total revenue
     const [revenueResult] = await db
->>>>>>> development
       .select({
         total: sql<number>`COALESCE(sum(${schema.serviceTransactions.amount}), 0)`,
       })
       .from(schema.serviceTransactions);
 
     // Total appointments
-<<<<<<< HEAD
-    const [appointmentsCount] = await this.db
-=======
     const [appointmentsCount] = await db
->>>>>>> development
       .select({ value: count() })
       .from(schema.appointments);
 
     // Total customers
-<<<<<<< HEAD
-    const [customersCount] = await this.db
-=======
     const [customersCount] = await db
->>>>>>> development
       .select({ value: count() })
       .from(schema.customers);
 
@@ -66,31 +41,19 @@ export class AdminService {
   }
 
   async listAllTenants() {
-<<<<<<< HEAD
-    const tenants = await this.db.query.tenants.findMany({
-=======
     const tenants = await db.query.tenants.findMany({
->>>>>>> development
       orderBy: desc(schema.tenants.createdAt),
     });
 
     // Enrich each tenant with employee count and revenue
     const enriched = await Promise.all(
       tenants.map(async (tenant) => {
-<<<<<<< HEAD
-        const [empCount] = await this.db
-=======
         const [empCount] = await db
->>>>>>> development
           .select({ value: count() })
           .from(schema.employees)
           .where(eq(schema.employees.tenantId, tenant.id));
 
-<<<<<<< HEAD
-        const [rev] = await this.db
-=======
         const [rev] = await db
->>>>>>> development
           .select({
             total: sql<number>`COALESCE(sum(${schema.serviceTransactions.amount}), 0)`,
           })
@@ -114,26 +77,13 @@ export class AdminService {
   }
 
   async getTenantDetail(tenantId: string) {
-<<<<<<< HEAD
-    const tenant = await this.db.query.tenants.findFirst({
-=======
     const tenant = await db.query.tenants.findFirst({
->>>>>>> development
       where: eq(schema.tenants.id, tenantId),
     });
 
     if (!tenant) throw new NotFoundException('Tenant not found');
 
     // Users belonging to this tenant
-<<<<<<< HEAD
-    const tenantUsers = await this.db.query.users.findMany({
-      where: eq(schema.users.tenantId, tenantId),
-      columns: { id: true, name: true, email: true, role: true, createdAt: true },
-    });
-
-    // Employees
-    const tenantEmployees = await this.db
-=======
     const tenantUsers = await db.query.users.findMany({
       where: eq(schema.users.tenantId, tenantId),
       columns: {
@@ -147,7 +97,6 @@ export class AdminService {
 
     // Employees
     const tenantEmployees = await db
->>>>>>> development
       .select({
         id: schema.employees.id,
         name: schema.users.name,
@@ -158,20 +107,12 @@ export class AdminService {
       .where(eq(schema.employees.tenantId, tenantId));
 
     // Services
-<<<<<<< HEAD
-    const tenantServices = await this.db.query.services.findMany({
-=======
     const tenantServices = await db.query.services.findMany({
->>>>>>> development
       where: eq(schema.services.tenantId, tenantId),
     });
 
     // Recent transactions (last 20)
-<<<<<<< HEAD
-    const recentTx = await this.db
-=======
     const recentTx = await db
->>>>>>> development
       .select({
         id: schema.serviceTransactions.id,
         amount: schema.serviceTransactions.amount,
@@ -188,11 +129,7 @@ export class AdminService {
       .limit(20);
 
     // Revenue
-<<<<<<< HEAD
-    const [rev] = await this.db
-=======
     const [rev] = await db
->>>>>>> development
       .select({
         total: sql<number>`COALESCE(sum(${schema.serviceTransactions.amount}), 0)`,
       })
@@ -218,11 +155,7 @@ export class AdminService {
       throw new NotFoundException('Invalid subscription tier');
     }
 
-<<<<<<< HEAD
-    const [updated] = await this.db
-=======
     const [updated] = await db
->>>>>>> development
       .update(schema.tenants)
       .set({ subscriptionTier: tier, updatedAt: new Date() })
       .where(eq(schema.tenants.id, tenantId))

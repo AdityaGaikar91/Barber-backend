@@ -12,12 +12,6 @@ import { JwtStrategy } from './jwt.strategy';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-<<<<<<< HEAD
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET') || 'fallback_secret',
-        signOptions: { expiresIn: '60m' },
-      }),
-=======
       useFactory: (configService: ConfigService) => {
         const secret = configService.get<string>('JWT_SECRET');
         if (!secret) {
@@ -28,7 +22,6 @@ import { JwtStrategy } from './jwt.strategy';
           signOptions: { expiresIn: '60m' },
         };
       },
->>>>>>> development
     }),
   ],
   providers: [AuthService, JwtStrategy],

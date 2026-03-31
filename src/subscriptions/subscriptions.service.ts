@@ -26,15 +26,8 @@ export const TIER_LIMITS = {
 
 @Injectable()
 export class SubscriptionsService {
-<<<<<<< HEAD
-  private readonly db = db;
-
-  async getTenantTier(tenantId: string): Promise<SubscriptionTier> {
-    const tenant = await this.db.query.tenants.findFirst({
-=======
   async getTenantTier(tenantId: string): Promise<SubscriptionTier> {
     const tenant = await db.query.tenants.findFirst({
->>>>>>> development
       where: eq(schema.tenants.id, tenantId),
     });
     return (
@@ -48,11 +41,7 @@ export class SubscriptionsService {
 
     if (limits.maxEmployees === Infinity) return true;
 
-<<<<<<< HEAD
-    const [result] = await this.db
-=======
     const [result] = await db
->>>>>>> development
       .select({ value: count() })
       .from(schema.employees)
       .where(eq(schema.employees.tenantId, tenantId));
@@ -75,11 +64,7 @@ export class SubscriptionsService {
     startOfMonth.setDate(1);
     startOfMonth.setHours(0, 0, 0, 0);
 
-<<<<<<< HEAD
-    const [result] = await this.db
-=======
     const [result] = await db
->>>>>>> development
       .select({ value: count() })
       .from(schema.serviceTransactions)
       .where(

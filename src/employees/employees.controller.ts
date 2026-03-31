@@ -33,11 +33,6 @@ export class EmployeesController {
   findAll(
     @Request() req: AuthenticatedRequest,
     @Query('tenantId') queryTenantId?: string,
-<<<<<<< HEAD
-  ) {
-    const tenantId = req.user.tenantId || queryTenantId;
-    return this.employeesService.findAll(tenantId as string);
-=======
     @Query('limit') limit?: string,
     @Query('offset') offset?: string,
   ) {
@@ -47,7 +42,6 @@ export class EmployeesController {
       limit ? parseInt(limit, 10) : undefined,
       offset ? parseInt(offset, 10) : undefined,
     );
->>>>>>> development
   }
 
   // Record a transaction for an employee

@@ -1,14 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { db } from '../db';
-<<<<<<< HEAD
-import { tenants } from '../db/schema';
-import { eq } from 'drizzle-orm';
-=======
 import { isDatabaseError } from '../db/database-error.interface';
 import { tenants } from '../db/schema';
 import { eq } from 'drizzle-orm';
 import { UpdateTenantSettingsDto } from './dto/update-tenant.dto';
->>>>>>> development
 
 @Injectable()
 export class TenantsService {
@@ -23,22 +18,14 @@ export class TenantsService {
         logoUrl: true,
         businessHours: true,
         subscriptionTier: true,
-<<<<<<< HEAD
-      }
-=======
       },
->>>>>>> development
     });
 
     if (!tenant) throw new NotFoundException('Tenant not found');
     return tenant;
   }
 
-<<<<<<< HEAD
-  async updateSettings(tenantId: string, data: any) {
-=======
   async updateSettings(tenantId: string, data: UpdateTenantSettingsDto) {
->>>>>>> development
     try {
       const [updated] = await db
         .update(tenants)
@@ -57,17 +44,11 @@ export class TenantsService {
 
       if (!updated) throw new NotFoundException('Tenant not found');
       return updated;
-<<<<<<< HEAD
-    } catch (e: any) {
-      if (e.code === '23505') {
-         throw new Error('This public URL slug is already taken by another shop.');
-=======
     } catch (e: unknown) {
       if (isDatabaseError(e) && e.code === '23505') {
         throw new Error(
           'This public URL slug is already taken by another shop.',
         );
->>>>>>> development
       }
       throw e;
     }

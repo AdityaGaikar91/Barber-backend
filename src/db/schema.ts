@@ -2,20 +2,14 @@ import {
   pgTable,
   text,
   timestamp,
-<<<<<<< HEAD
-=======
   numeric,
->>>>>>> development
   doublePrecision,
   boolean,
   integer,
   unique,
   jsonb,
 } from 'drizzle-orm/pg-core';
-<<<<<<< HEAD
-=======
 import { relations } from 'drizzle-orm';
->>>>>>> development
 
 export const tenants = pgTable('tenants', {
   id: text('id')
@@ -90,11 +84,7 @@ export const services = pgTable('services', {
     .notNull(),
   name: text('name').notNull(),
   description: text('description'),
-<<<<<<< HEAD
-  price: doublePrecision('price').notNull(),
-=======
   price: numeric('price', { precision: 10, scale: 2 }).notNull(),
->>>>>>> development
   duration: integer('duration').notNull(), // Minutes
   category: text('category'),
   isActive: boolean('is_active').default(true).notNull(),
@@ -116,11 +106,7 @@ export const serviceTransactions = pgTable('service_transactions', {
     .references(() => employees.id)
     .notNull(),
   customerId: text('customer_id').references(() => customers.id),
-<<<<<<< HEAD
-  amount: doublePrecision('amount').notNull(),
-=======
   amount: numeric('amount', { precision: 10, scale: 2 }).notNull(),
->>>>>>> development
   timestamp: timestamp('timestamp').defaultNow().notNull(),
   status: text('status').default('COMPLETED').notNull(), // 'PENDING', 'COMPLETED', 'CANCELLED'
   createdAt: timestamp('created_at').defaultNow().notNull(),
@@ -166,10 +152,6 @@ export const appointments = pgTable('appointments', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
-<<<<<<< HEAD
-import { relations } from 'drizzle-orm';
-=======
->>>>>>> development
 export const appointmentsRelations = relations(appointments, ({ one }) => ({
   service: one(services, {
     fields: [appointments.serviceId],

@@ -24,12 +24,8 @@ export class RegisterDto {
   role!: 'SUPER_ADMIN' | 'OWNER' | 'EMPLOYEE' | 'CUSTOMER';
 
   // Required if role is 'OWNER'
-<<<<<<< HEAD
-  @ValidateIf((o) => o.role === 'OWNER')
-=======
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   @ValidateIf((o: any) => o.role === 'OWNER')
->>>>>>> development
   @IsString()
   @IsNotEmpty()
   shopName?: string;

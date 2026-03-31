@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-import { Test, TestingModule } from '@nestjs/testing';
-import { SubscriptionsService } from './subscriptions.service';
-=======
 import { ForbiddenException } from '@nestjs/common';
 import {
   SubscriptionsService,
@@ -24,23 +20,10 @@ jest.mock('../db', () => ({
 }));
 
 import { db } from '../db';
->>>>>>> development
 
 describe('SubscriptionsService', () => {
   let service: SubscriptionsService;
 
-<<<<<<< HEAD
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [SubscriptionsService],
-    }).compile();
-
-    service = module.get<SubscriptionsService>(SubscriptionsService);
-  });
-
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-=======
   beforeEach(() => {
     service = new SubscriptionsService();
     jest.clearAllMocks();
@@ -193,6 +176,5 @@ describe('SubscriptionsService', () => {
 
       expect(await service.isPro('tenant-1')).toBe(false);
     });
->>>>>>> development
   });
 });

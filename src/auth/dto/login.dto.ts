@@ -6,9 +6,6 @@ export class LoginDto {
 
   @IsString()
   @IsNotEmpty()
-<<<<<<< HEAD
-=======
   @MinLength(6)
->>>>>>> development
   password!: string;
 }

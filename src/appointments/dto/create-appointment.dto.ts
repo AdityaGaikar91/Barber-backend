@@ -2,10 +2,6 @@ import {
   IsNotEmpty,
   IsString,
   IsUUID,
-<<<<<<< HEAD
-  IsEmail,
-=======
->>>>>>> development
   IsOptional,
   IsDateString,
   MinLength,

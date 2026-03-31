@@ -1,12 +1,8 @@
 import { Module } from '@nestjs/common';
-<<<<<<< HEAD
-import { ConfigModule } from '@nestjs/config';
-=======
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { BullModule } from '@nestjs/bullmq';
->>>>>>> development
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -27,8 +23,6 @@ import { AdminModule } from './admin/admin.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-<<<<<<< HEAD
-=======
     BullModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -52,7 +46,6 @@ import { AdminModule } from './admin/admin.module';
       }),
       inject: [ConfigService],
     }),
->>>>>>> development
     EventEmitterModule.forRoot(),
     ScheduleModule.forRoot(),
     UsersModule,
@@ -69,10 +62,6 @@ import { AdminModule } from './admin/admin.module';
     AdminModule,
   ],
   controllers: [AppController],
-<<<<<<< HEAD
-  providers: [AppService],
-=======
   providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],
->>>>>>> development
 })
 export class AppModule {}
